@@ -19,14 +19,35 @@ class Home extends Component {
     // To avoid having dup values, we use the Math.random() function to generate a random value for a todo id.
     // This solution works for a small application but a more complex hashing function should be used when
     // dealing with a larger data sensitive project.
-    todo.id = Math.random();
-    // Create a array that contains the current array and the new todo item
-    let new_list = [...this.state.todos, todo];
-    // Update the local state with the new array.
-    this.setState({
-      todos: new_list,
-    });
+    if (this.state.todos.find(element => element.content === todo.content)){
+      return;
+    } else {
+      todo.id = Math.random();
+      // Create a array that contains the current array and the new todo item
+      let new_list = [...this.state.todos, todo];
+      // Update the local state with the new array.
+      this.setState({
+        todos: new_list,
+      });
+    }
   };
+
+  // if (this.todo.id.find(t => t === todo)) {
+  //     return;
+  // } else {
+  //   let new_list = [...this.state.todos, todo];}
+  // };
+
+  deleteTodo = (id) => {
+    const todos = this.state.todos.filter((todo) => {
+      return todo.id !== id;
+    });
+    this.setState({
+      todos: todos,
+    });
+};
+
+
   render() {
     return (
       <div className="Home">
@@ -34,9 +55,9 @@ class Home extends Component {
         {/* When passing the AddTodo component, addTodo is a prop that is used in the 
         AddTodo.js file when handling the submit */}
         <AddTodo addTodo={this.addTodo} />
+        <Todos todos={this.state.todos} deleteTodo={this.deleteTodo}/>
         {/* When returning the Todos component, todos is a prop passed to the todos.js file
          to format and render the current todo list state */}
-        <Todos todos={this.state.todos} />
       </div>
     );
   }
